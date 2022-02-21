@@ -180,16 +180,19 @@ chrome.storage.sync.get("active", (data) => {
         function getSubjectLinkFromGroupHtml(groupHtml) {
             return groupHtml.querySelector("h1").querySelector("a[tabindex]").getAttribute("href");
         }
-
+        ``` NOT WORKING YET
         function getSubjectHtmlFromSubjectLink(subjectLink) {
             let subjectXmlRequest = new XMLHttpRequest;
-            subjectXmlRequest.open("get", subjectLink, false);
+            subjectXmlRequest.open("get", subjectLink);
             subjectXmlRequest.send();
             var subjectDoc;
-            let parser = new DOMParser();
-            subjectDoc = parser.parseFromString(subjectXmlRequest.responseText, 'text/html');
+            subjectXmlRequest.onloadend = function() {
+                let parser = new DOMParser();
+                subjectDoc = parser.parseFromString(subjectXmlRequest.responseText, 'text/html');
+            }
             return subjectDoc;
         }
+        ```
 
         function getSubjectEctsFromSubjectHtml(subjectHtml) {
             return parseFloat(Array.from(subjectHtml.querySelectorAll("tr")).find(el => el.textContent.includes("ECTS")).querySelector(".data").innerText.match("[0-9]+.[0-9]+"));
@@ -427,14 +430,14 @@ chrome.storage.sync.get("active", (data) => {
 
             var combinationsArrayCollisionsOnly = combinationsArrayWithCollisions.filter((arr) => !combinationsArrayWithoutCollisions.includes(arr));
 
-
+            ``` NOT WORKING YET
             let ectsSum = 0;
 
             for (let planElement of plan) {
                 let subjectHtml = getSubjectHtmlFromSubjectLink(planElement.link);
                 ectsSum += getSubjectEctsFromSubjectHtml(subjectHtml); 
             }
-
+            ```
 
             function highlightPlan(allowedSubjects) {
                 for (let i = 0; i < groupsArray.length; i++) {
@@ -589,11 +592,12 @@ chrome.storage.sync.get("active", (data) => {
             choiceDiv.appendChild(collidingDropdownDiv);
             formPlacing.appendChild(choiceDiv);
 
-
+            ``` NOT WORKING YET
             let ectsDisplay = document.createElement("div");
             ectsDisplay.innerHTML = "Liczba ECTS w planie: <b>" + ectsSum.toString() + "</b>";
             ectsDisplay.margin = "5px";
             formPlacing.appendChild(ectsDisplay);
+            ```
         }
     }
 });
