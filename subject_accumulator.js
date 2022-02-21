@@ -5,7 +5,6 @@ chrome.storage.sync.get("active", (data) => {
         let endTimeRegex = "(?<=- )" + timeRegex;
         let hoursRegex = "[0-9]+(?=:)";
         let minutesRegex = "(?<=:)[0-9]+";
-        let lectureColor = "#FFFFE1";
         let dayOfWeekRegex ="(poniedziałek|wtorek|środa|czwartek|piątek|sobota|niedziela)";
         let frequencyRegex = "(każd|(?<!nie)parzyste|nieparzyste|niestandardowa)";
         let allSubjects = document.querySelectorAll("td[onclick]");
@@ -135,12 +134,9 @@ chrome.storage.sync.get("active", (data) => {
             return planElement.getElementsByTagName('div')[0].textContent.replace(new RegExp("/.*/"), "");
         }
 
-
-
         function getLinkFromPlanElement(planElement) {
             return planElement.getAttribute("onclick").match("https://.*(?=\")")[0];
         }
-
 
         function getGroupNumberFromPlanElement(planElement) {
             let link = getLinkFromPlanElement(planElement);
@@ -199,11 +195,6 @@ chrome.storage.sync.get("active", (data) => {
             return parseFloat(Array.from(subjectHtml.querySelectorAll("tr")).find(el => el.textContent.includes("ECTS")).querySelector(".data").innerText.match("[0-9]+.[0-9]+"));
         }
 
-
-
-
-
-
         function doGroupsCollide(group1, group2, ignoreLectures) {
             if (ignoreLectures) {
                 if (group1.type === "wykład" || group2.type === "wykład") {
@@ -244,45 +235,6 @@ chrome.storage.sync.get("active", (data) => {
             return -1;
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        let allGroupHtmls = [];
-        for (let planElement of allSubjects) {
-            allGroupHtmls.push(0);
-        }
-        for (let i = 0; i < allSubjects.length; i++) {
-            getGroupHtmlFromPlanElement(allSubjects[i], i);
-        }
-
         function getGroupHtmlFromPlanElement(planElement, index) {
             let groupXmlRequest = new XMLHttpRequest();
             groupXmlRequest.open("get", getLinkFromPlanElement(planElement));
@@ -305,7 +257,17 @@ chrome.storage.sync.get("active", (data) => {
         }
 
 
+        let allGroupHtmls = [];
+        for (let planElement of allSubjects) {
+            allGroupHtmls.push(0);
+        }
+        for (let i = 0; i < allSubjects.length; i++) {
+            getGroupHtmlFromPlanElement(allSubjects[i], i);
+        }
+
+
         function allReady() {
+        //Tworzenie planu
             let index = 0;
             for (let planElement of allSubjects) {
                 let checkedSubjectName = nameFromPlanElement(planElement);
@@ -345,10 +307,6 @@ chrome.storage.sync.get("active", (data) => {
             }
 
 
-
-
-
-
             function groupSetsCollisionLessCombinations(set1, set2, ignoreLectures) {
                 let possibleCombinations = [];
                 for (var i = 0; i < set1.length; i++) {
@@ -360,7 +318,6 @@ chrome.storage.sync.get("active", (data) => {
                 }
                 return possibleCombinations;
             }
-
 
 
             for (let subject of plan) {
@@ -395,8 +352,6 @@ chrome.storage.sync.get("active", (data) => {
             }
 
 
-
-
             let subjectPairsMatrixWithCollisions = [];
             for (let i = 0; i < groupsArray.length; i++) {
                 subjectPairsMatrixWithCollisions.push([]);
@@ -422,7 +377,6 @@ chrome.storage.sync.get("active", (data) => {
                     subjectPairsMatrixWithoutCollisions[i][j] = groupSetsCollisionLessCombinations(groupsArray[i], groupsArray[j], false);
                 }
             }
-
 
 
             var combinationsArrayWithCollisions = [[]];
@@ -667,6 +621,16 @@ chrome.storage.sync.get("active", (data) => {
             ectsDisplay.innerHTML = "Liczba ECTS w planie: <b>" + ectsSum.toString() + "</b>";
             ectsDisplay.margin = "5px";
             formPlacing.appendChild(ectsDisplay);
+                // add terms preferences
         }
     }
+
+
+
+        // add menu for choosing highlighted subjects
+
+
+        // activation /deactivation box
+        // selection for lectures
+
 });
