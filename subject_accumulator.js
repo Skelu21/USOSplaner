@@ -428,22 +428,12 @@ chrome.storage.sync.get("active", (data) => {
             var combinationsArrayCollisionsOnly = combinationsArrayWithCollisions.filter((arr) => !combinationsArrayWithoutCollisions.includes(arr));
 
 
+            let ectsSum = 0;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            for (let planElement of plan) {
+                let subjectHtml = getSubjectHtmlFromSubjectLink(planElement.link);
+                ectsSum += getSubjectEctsFromSubjectHtml(subjectHtml); 
+            }
 
 
             function highlightPlan(allowedSubjects) {
@@ -465,7 +455,6 @@ chrome.storage.sync.get("active", (data) => {
                     }
                 }
             }
-
 
 
             let collisionlessDropdownDiv = document.createElement("div");
@@ -508,13 +497,6 @@ chrome.storage.sync.get("active", (data) => {
             collisionlessDropdownDiv.appendChild(collisonlessDropdown);
             collisionlessDropdownDiv.appendChild(collisionlessNextButton);
             collisionlessDropdownDiv.appendChild(collisionlessClearButton);
-
-
-
-
-
-
-
 
 
             let collidingDropdownDiv = document.createElement("div");
@@ -568,7 +550,6 @@ chrome.storage.sync.get("active", (data) => {
             }
 
 
-
             let choiceDiv = document.createElement("div");
             choiceDiv.innerHTML = "<b>Bezkolizyjne plany studiów:</b> </br>";
             choiceDiv.style.margin = "10px";
@@ -609,28 +590,10 @@ chrome.storage.sync.get("active", (data) => {
             formPlacing.appendChild(choiceDiv);
 
 
-
-
-            let ectsSum = 0;
-
-            for (let planElement of plan) {
-                let subjectHtml = getSubjectHtmlFromSubjectLink(planElement.link);
-                ectsSum += getSubjectEctsFromSubjectHtml(subjectHtml); 
-            }
             let ectsDisplay = document.createElement("div");
             ectsDisplay.innerHTML = "Liczba ECTS w planie: <b>" + ectsSum.toString() + "</b>";
             ectsDisplay.margin = "5px";
             formPlacing.appendChild(ectsDisplay);
-                // add terms preferences
         }
     }
-
-
-
-        // add menu for choosing highlighted subjects
-
-
-        // activation /deactivation box
-        // selection for lectures
-
 });
