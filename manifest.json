@@ -1,0 +1,31 @@
+{
+    "name": "USOS Planer",
+    "description": "Pomoc w układaniu planu zajęć w systemie USOS UW",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "u_ikona.png",
+            "32": "u_ikona.png",
+            "48": "u_ikona.png",
+            "128": "u_ikona.png"
+        }
+    },
+    "icons": {
+        "16": "u_ikona.png",
+        "32": "u_ikona.png",
+        "48": "u_ikona.png",
+        "128": "u_ikona.png"
+    },
+    "permissions": ["scripting", "activeTab", "storage"],
+    "content_scripts": [
+        {
+            "matches" : [ "https://usosweb.uw.edu.pl/*" ],
+            "js": ["./subject_accumulator.js"]
+        }
+    ],
+    "background": {
+        "service_worker": "background.js"
+    }
+}
